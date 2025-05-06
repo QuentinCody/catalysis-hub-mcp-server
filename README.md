@@ -1,50 +1,78 @@
-# Building a Remote MCP Server on Cloudflare (Without Auth)
+# Catalysis Hub for Claude Desktop
 
-This example allows you to deploy a remote MCP server that doesn't require authentication on Cloudflare Workers. 
+This guide will help you connect Claude Desktop to the Catalysis Hub database, allowing you to search and analyze computational catalysis data directly in your conversations with Claude.
 
-## Get started: 
+## What is Catalysis Hub?
 
-[![Deploy to Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-authless)
+Catalysis Hub is a database containing computational catalysis research data, including:
+- Reaction energetics and barriers
+- Surface structures and properties
+- Density Functional Theory (DFT) calculation parameters
+- Publication metadata and references
 
-This will deploy your MCP server to a URL like: `remote-mcp-server-authless.<your-account>.workers.dev/sse`
+By connecting Claude to this database, you can ask questions about catalysis research, look up specific reactions, and analyze materials data without having to navigate complex databases yourself.
 
-Alternatively, you can use the command line below to get the remote MCP Server created on your local machine:
-```bash
-npm create cloudflare@latest -- my-mcp-server --template=cloudflare/ai/demos/remote-mcp-authless
-```
+## Setting Up Claude Desktop (Simple Method)
 
-## Customizing your MCP Server
+Follow these simple steps to enable Catalysis Hub in your Claude Desktop application:
 
-To add your own [tools](https://developers.cloudflare.com/agents/model-context-protocol/tools/) to the MCP server, define each tool inside the `init()` method of `src/index.ts` using `this.server.tool(...)`. 
-
-## Connect to Cloudflare AI Playground
-
-You can connect to your MCP server from the Cloudflare AI Playground, which is a remote MCP client:
-
-1. Go to https://playground.ai.cloudflare.com/
-2. Enter your deployed MCP server URL (`remote-mcp-server-authless.<your-account>.workers.dev/sse`)
-3. You can now use your MCP tools directly from the playground!
-
-## Connect Claude Desktop to your MCP server
-
-You can also connect to your remote MCP server from local MCP clients, by using the [mcp-remote proxy](https://www.npmjs.com/package/mcp-remote). 
-
-To connect to your MCP server from Claude Desktop, follow [Anthropic's Quickstart](https://modelcontextprotocol.io/quickstart/user) and within Claude Desktop go to Settings > Developer > Edit Config.
-
-Update with this configuration:
+1. **Open Claude Desktop** on your computer
+2. Click on the **Settings** icon (gear icon)
+3. Select the **Developer** tab
+4. Click **Edit Config** to open the configuration file
+5. Add the following code to the `mcpServers` section:
 
 ```json
-{
-  "mcpServers": {
-    "calculator": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "http://localhost:8787/sse"  // or remote-mcp-server-authless.your-account.workers.dev/sse
-      ]
-    }
-  }
+"catalysis-hub": {
+  "command": "npx",
+  "args": [
+    "mcp-remote",
+    "https://catalysis-hub-mcp-server.quentincody.workers.dev/sse"
+  ]
 }
 ```
 
-Restart Claude and you should see the tools become available. 
+6. **Save** the file
+7. **Restart** Claude Desktop
+
+## Using Catalysis Hub with Claude
+
+After setting up Claude Desktop, you can now ask Claude to access information from the Catalysis Hub database. Here are some examples of what you can ask:
+
+- "Can you use Catalysis Hub to list 5 recent publications about CO2 reduction?"
+- "Search Catalysis Hub for reactions involving platinum catalysts"
+- "Use Catalysis Hub to tell me about the most studied metal surfaces in the database"
+- "Get information about adsorption energies for carbon monoxide on different metal surfaces from Catalysis Hub"
+
+Claude will use the GraphQL interface to query the database and return the relevant information to you.
+
+## Example Queries
+
+Here are specific examples showing how to ask Claude to use Catalysis Hub effectively:
+
+1. **List recent publications**:
+   "Using Catalysis Hub, could you list 5 recent publications about water splitting catalysts?"
+
+2. **Find specific reactions**:
+   "Can you search Catalysis Hub for CO2 reduction reactions and summarize the findings?"
+
+3. **Compare catalyst materials**:
+   "Use Catalysis Hub to compare adsorption energies of hydrogen on platinum versus palladium surfaces"
+
+4. **Explore reaction mechanisms**:
+   "Using Catalysis Hub, can you find information about the oxygen evolution reaction mechanism on oxide catalysts?"
+
+## Troubleshooting
+
+If Claude says it can't access Catalysis Hub:
+
+1. Make sure you've correctly added the configuration to Claude Desktop
+2. Restart Claude Desktop completely
+3. When asking Claude to use Catalysis Hub, be specific that you want it to use the "catalysis-hub" tool
+4. If errors persist about queries, try asking Claude to run an introspection query first to understand the database schema
+
+## Need Help?
+
+If you encounter any issues or have questions about using Catalysis Hub with Claude Desktop, please contact technical support or the database administrators.
+
+Happy researching!
