@@ -9,6 +9,9 @@
 	"compatibility_date": "2025-03-10",
 	"compatibility_flags": ["nodejs_compat"],
 
+	"alias": {
+		"ai": "./src/ai-stub.ts"
+	},
 	"observability": {
 		"enabled": true
 	}
